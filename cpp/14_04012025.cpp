@@ -17,16 +17,33 @@ Explanation: There is no common prefix among the input strings.
 */
 
 
-#include <iostream>
-
-
 class Solution {
 public:
-    std::string longestCommonPrefix(std::vector<std::string>& strs) {
+    string longestCommonPrefix(vector<string>& strs) {
+        if (strs.empty()){
+            return "";
+        }
 
-        for (std::string word : strs) {
+        if (strs.size() == 1) {
+            return strs[0];
+        }
+
+        string prefix = strs[0];
+
+        for (string word : strs) {
+            int min_val = min(word.length(), prefix.length());
+            prefix = prefix.substr(0, min_val);
+            for (int i = 0; i < min_val; i++) {
+                if (prefix[0] != word[0]) {
+                    return "";
+                }
+                if (prefix[i] != word[i]) {
+                    prefix = prefix.substr(0, i);
+                    
+                }
+            }
             
         }
-        
+        return prefix;
     }
 };
