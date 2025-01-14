@@ -31,7 +31,7 @@ public:
         }
         return s.substr(firstIndex, lastIndex - firstIndex + 1).length();
         
-    }
+    };
 
 // strategy:
 // start from the end 1. start with a non ' ' letter, iterate to find index with another ' ' or index 0, then return substring
