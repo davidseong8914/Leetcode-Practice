@@ -16,18 +16,54 @@ public:
     void merge(std::vector<int>& nums1, int m, std::vector<int>& nums2, int n) {
         std::vector<int> sorted;
 
-        for (int i ; i < m-1; i++) {
-            for (int j; j < n-1; j++) {
+        for (int i = 0; i < m-1;) {
+            for (int j = 0; j < n-1;) {
                 if (nums2[j] < nums1[i]) {
-                    sorted.push_back(j);
-                    i--;
+                    sorted.push_back(nums2[j]);
+                    j++;
                 } else{
-                    sorted.push_back(i);
-                    j--;
+                    sorted.push_back(nums1[i]);
+                    i++;
                 }
             }
         }
 
         nums1 = sorted;
+    }
+};
+
+//// Below for answer (smart use of while loops)
+
+class Solution {
+public:
+    void merge(std::vector<int>& nums1, int m, std::vector<int>& nums2, int n) {
+        std::vector<int> merged;
+
+        int i = 0;
+        int j = 0;
+    // Merge until one array is exhausted
+    while (i < m && j < n) {
+        if (nums1[i] <= nums2[j]) {
+            merged.push_back(nums1[i]);
+            i++;
+        } else {
+            merged.push_back(nums2[j]);
+            j++;
+        }
+    }
+    
+    // Add any remaining elements from nums1
+    while (i < m) {
+        merged.push_back(nums1[i]);
+        i++;
+    }
+
+    // Add any remaining elements from nums2
+    while (j < n) {
+        merged.push_back(nums2[j]);
+        j++;
+    }
+
+        nums1 = merged;
     }
 };
