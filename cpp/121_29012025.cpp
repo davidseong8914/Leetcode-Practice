@@ -10,33 +10,37 @@ Return the maximum profit you can achieve from this transaction. If you cannot a
 #include <vector>
 
 class Solution {
-public:
-    int maxProfit(std::vector<int>& prices) {
-        int i = 0;
-        int min_1 =0, max_1=0, min_2=0, max_2 = 0;
-
-        if (prices.size() < 2) {
-            return 0;
-        }
-
-        while (i < prices.size()) {
-            // initializing first min
-            if (i == 0 or prices[i] < min_1 and min_1 != 0) {
-                min_1 = prices[i];
-            } 
-
-            if ((min_1 != 0 and max_1 == 0 and prices[i] > min_1) or (max_1 != 0 and prices[i] > max_1)) {
-                max_1 = prices[i];
+    public:
+        int maxProfit(std::vector<int> & prices) {
+            int maxProfit = 0, min = 0, max = 0;
+            int i;
+            if (prices.size() < 2) {
+                return 0;
             }
-            i++;
-        }
-    if (max_1 - min_1 > 0) {
-        return max_1 - min_1;
-    } else {
-        return 0;
-    }        
-    }
+
+            while (i < prices.size()) {
+                // min case
+                if (i == 0 or prices[i] < min) {
+                    min = prices[i];
+                }
+                // max case
+                else if (max < prices[i]) {
+                        max = prices[i];
+                    }
+                
+
+                if (max - min >= maxProfit) {
+                    maxProfit = max - min;
+                    // max = 0;
+                }
+                max = 0;
+                i++;
+
+            }
+            return maxProfit;
+        }    
 };
+
 
 int main() {
     Solution solution;
