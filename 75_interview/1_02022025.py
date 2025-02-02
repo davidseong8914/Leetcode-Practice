@@ -19,11 +19,12 @@ class Solution(object):
             i = i+1
 
         # optimize by making it not have to compare everytime
-        while i < (max(len(word1)), max(len(word2))):
-            if (word1.length() > word2.length()):
+        while i < (max(len(word1), len(word2))):
+            if (len(word1) > len(word2)):
                 merged.append(word1[i])
             else:
                 merged.append(word2[i])
+            i = i + 1
 
         rtr_str = ''.join(merged)
         return rtr_str
