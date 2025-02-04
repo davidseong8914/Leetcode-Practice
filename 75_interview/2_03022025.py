@@ -13,6 +13,7 @@ class Solution(object):
 
         if str1+str2 != str2+str1:
              return ""
+        
         i = 0
         denom = []
         merged = ""
@@ -28,9 +29,4 @@ class Solution(object):
         
         
         merged = ''.join(denom)
-        for i in range(max(len(str1), len(str2))/len(denom)):
-             sup_str = max(str1, str2)
-             if merged * i not in sup_str:
-                return ""
-
         return merged
