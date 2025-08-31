@@ -10,6 +10,8 @@ class Solution(object):
         """
         
         answer = []
+        mult = 1
+
 
         # suffix pass
         for i in range(len(nums)):
@@ -21,11 +23,9 @@ class Solution(object):
         # answer = [1, 1, 2, 6]
 
         for i in reversed(range(len(nums))):
-            mult = 1
-            if i == 0:
-                mult = nums[i]
-            else:
-                answer[i] = answer[i] * nums
-                mult = mult * nums[i]
+            answer[i] = answer[i] * mult
+            mult = mult * nums[i]
+
+        return answer
     
 
