@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LeetCode 75 Dashboard</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; margin: 24px; }
+    h1 { margin-bottom: 0.25rem; }
+    .muted { color: #666; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+    th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+    th { background: #f7f7f7; text-align: left; }
+    tr:nth-child(even) { background: #fafafa; }
+    .pill { display:inline-block; padding:2px 8px; border-radius:999px; background:#efefef; margin-right:8px; }
+    .attempted.O { background:#e6ffed; }
+    .attempted.X { background:#ffecec; }
+    .editable { background: #fffef6; min-width: 90px; }
+    .sticky-head th { position: sticky; top: 0; background: #f7f7f7; z-index: 1; }
+    .toolbar { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
+    button { padding: 6px 10px; border: 1px solid #aaa; background: #fff; cursor: pointer; border-radius: 6px; }
+    button:hover { background:#f2f2f2; }
+    .search { padding:6px 10px; border:1px solid #aaa; border-radius:6px; min-width: 220px; }
+  </style>
+</head>
+<body>
+  <h1>LeetCode 75 Dashboard</h1>
+  <div class="muted">
+    <span class="pill">Total: 76</span>
+    <span class="pill">Attempted: 8/76</span>
+    <span class="pill">Current streak: 1</span>
+    <span class="pill">Best streak: 3</span>
+    <span class="pill">Most recent day: 2025-09-08</span>
+  </div>
+
+  <div class="toolbar" style="margin-top:12px;">
+    <input id="q" class="search" type="search" placeholder="Filter by id or title…" oninput="filterRows()">
+    <button onclick="clearAllNotes()">Clear Notes (Cols 3–6)</button>
+    <button onclick="exportNotes()">Export Notes (JSON)</button>
+    <input type="file" id="importFile" accept="application/json" onchange="importNotes(event)" />
+  </div>
+
+  <table id="grid">
+    <thead class="sticky-head">
+      <tr>
+        <th style="width:90px;">#</th>
+        <th>Title</th>
+        <th style="width:110px;">Attempted</th>
+        <th style="width:130px;">First Try Pass</th>
+        <th style="width:140px;">Passed Eventually</th>
+        <th style="width:110px;">Optimal</th>
+        <th>Thoughts</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr data-pid="id">
+        <td>id</td>
+        <td>title</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1768">
+        <td>1768</td>
+        <td>Merge Strings Alternately</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1071">
+        <td>1071</td>
+        <td>Greatest Common Divisor of Strings</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1431">
+        <td>1431</td>
+        <td>Kids With the Greatest Number of Candies</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="605">
+        <td>605</td>
+        <td>Can Place Flowers</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="345">
+        <td>345</td>
+        <td>Reverse Vowels of a String</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="151">
+        <td>151</td>
+        <td>Reverse Words in a String</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="238">
+        <td>238</td>
+        <td>Product of Array Except Self</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="334">
+        <td>334</td>
+        <td>Increasing Triplet Subsequence</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="443">
+        <td>443</td>
+        <td>String Compression</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="283">
+        <td>283</td>
+        <td>Move Zeroes</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="392">
+        <td>392</td>
+        <td>Is Subsequence</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="11">
+        <td>11</td>
+        <td>Container With Most Water</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1679">
+        <td>1679</td>
+        <td>Max Number of K-Sum Pairs</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="643">
+        <td>643</td>
+        <td>Maximum Average Subarray I</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1456">
+        <td>1456</td>
+        <td>Maximum Number of Vowels in a Substring of Given Length</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1004">
+        <td>1004</td>
+        <td>Max Consecutive Ones III</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1493">
+        <td>1493</td>
+        <td>Longest Subarray of 1's After Deleting One Element</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1732">
+        <td>1732</td>
+        <td>Find the Highest Altitude</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="724">
+        <td>724</td>
+        <td>Find Pivot Index</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2215">
+        <td>2215</td>
+        <td>Find the Difference of Two Arrays</td>
+        <td class="attempted O">O</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1207">
+        <td>1207</td>
+        <td>Unique Number of Occurrences</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1657">
+        <td>1657</td>
+        <td>Determine if Two Strings Are Close</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2352">
+        <td>2352</td>
+        <td>Equal Row and Column Pairs</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2390">
+        <td>2390</td>
+        <td>Removing Stars From a String</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="735">
+        <td>735</td>
+        <td>Asteroid Collision</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="394">
+        <td>394</td>
+        <td>Decode String</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="933">
+        <td>933</td>
+        <td>Number of Recent Calls</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="649">
+        <td>649</td>
+        <td>Dota2 Senate</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2095">
+        <td>2095</td>
+        <td>Delete the Middle Node of a Linked List</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="328">
+        <td>328</td>
+        <td>Odd Even Linked List</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="206">
+        <td>206</td>
+        <td>Reverse Linked List</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2130">
+        <td>2130</td>
+        <td>Maximum Twin Sum of a Linked List</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="104">
+        <td>104</td>
+        <td>Maximum Depth of Binary Tree</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="872">
+        <td>872</td>
+        <td>Leaf-Similar Trees</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1448">
+        <td>1448</td>
+        <td>Count Good Nodes in Binary Tree</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="437">
+        <td>437</td>
+        <td>Path Sum III</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1372">
+        <td>1372</td>
+        <td>Longest ZigZag Path in a Binary Tree</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="236">
+        <td>236</td>
+        <td>Lowest Common Ancestor of a Binary Tree</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="199">
+        <td>199</td>
+        <td>Binary Tree Right Side View</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1161">
+        <td>1161</td>
+        <td>Maximum Level Sum of a Binary Tree</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="700">
+        <td>700</td>
+        <td>Search in a Binary Search Tree</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="450">
+        <td>450</td>
+        <td>Delete Node in a BST</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="841">
+        <td>841</td>
+        <td>Keys and Rooms</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="547">
+        <td>547</td>
+        <td>Number of Provinces</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1466">
+        <td>1466</td>
+        <td>Reorder Routes to Make All Paths Lead to the City Zero</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="399">
+        <td>399</td>
+        <td>Evaluate Division</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1926">
+        <td>1926</td>
+        <td>Nearest Exit from Entrance in Maze</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="994">
+        <td>994</td>
+        <td>Rotting Oranges</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="215">
+        <td>215</td>
+        <td>Kth Largest Element in an Array</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2336">
+        <td>2336</td>
+        <td>Smallest Number in Infinite Set</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2542">
+        <td>2542</td>
+        <td>Maximum Subsequence Score</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2462">
+        <td>2462</td>
+        <td>Total Cost to Hire K Workers</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="374">
+        <td>374</td>
+        <td>Guess Number Higher or Lower</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="2300">
+        <td>2300</td>
+        <td>Successful Pairs of Spells and Potions</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="162">
+        <td>162</td>
+        <td>Find Peak Element</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="875">
+        <td>875</td>
+        <td>Koko Eating Bananas</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="17">
+        <td>17</td>
+        <td>Letter Combinations of a Phone Number</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="216">
+        <td>216</td>
+        <td>Combination Sum III</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1137">
+        <td>1137</td>
+        <td>N-th Tribonacci Number</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="746">
+        <td>746</td>
+        <td>Min Cost Climbing Stairs</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="198">
+        <td>198</td>
+        <td>House Robber</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="790">
+        <td>790</td>
+        <td>Domino and Tromino Tiling</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="62">
+        <td>62</td>
+        <td>Unique Paths</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1143">
+        <td>1143</td>
+        <td>Longest Common Subsequence</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="714">
+        <td>714</td>
+        <td>Best Time to Buy and Sell Stock with Transaction Fee</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="72">
+        <td>72</td>
+        <td>Edit Distance</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="338">
+        <td>338</td>
+        <td>Counting Bits</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="136">
+        <td>136</td>
+        <td>Single Number</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1318">
+        <td>1318</td>
+        <td>Minimum Flips to Make a OR b Equal to c</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="208">
+        <td>208</td>
+        <td>Implement Trie (Prefix Tree)</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="1268">
+        <td>1268</td>
+        <td>Search Suggestions System</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="435">
+        <td>435</td>
+        <td>Non-overlapping Intervals</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="452">
+        <td>452</td>
+        <td>Minimum Number of Arrows to Burst Balloons</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="739">
+        <td>739</td>
+        <td>Daily Temperatures</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+      <tr data-pid="901">
+        <td>901</td>
+        <td>Online Stock Span</td>
+        <td class="attempted X">X</td>
+        <td class="editable" contenteditable="true" data-field="first_try"></td>
+        <td class="editable" contenteditable="true" data-field="passed"></td>
+        <td class="editable" contenteditable="true" data-field="optimal"></td>
+        <td class="editable" contenteditable="true" data-field="thoughts"></td>
+      </tr>
+    
+    </tbody>
+  </table>
+
+<script>
+function keyFor(id, field) { return `lc75::${id}::${field}`; }
+
+function saveCell(e) {
+  const td = e.target;
+  const id = td.closest('tr').dataset.pid;
+  const field = td.dataset.field;
+  localStorage.setItem(keyFor(id, field), td.innerText.trim());
+}
+
+function loadCells() {
+  document.querySelectorAll('tbody tr').forEach(tr => {
+    const id = tr.dataset.pid;
+    ['first_try','passed','optimal','thoughts'].forEach(field => {
+      const key = keyFor(id, field);
+      const val = localStorage.getItem(key);
+      if (val !== null) {
+        const cell = tr.querySelector(`[data-field="${field}"]`);
+        if (cell) cell.innerText = val;
+      }
+    });
+  });
+}
+
+function clearAllNotes() {
+  if (!confirm('Clear all saved notes for columns 3–6?')) return;
+  document.querySelectorAll('tbody tr').forEach(tr => {
+    const id = tr.dataset.pid;
+    ['first_try','passed','optimal','thoughts'].forEach(field => {
+      localStorage.removeItem(keyFor(id, field));
+      const cell = tr.querySelector(`[data-field="${field}"]`);
+      if (cell) cell.innerText = '';
+    });
+  });
+}
+
+function exportNotes() {
+  const data = {};
+  document.querySelectorAll('tbody tr').forEach(tr => {
+    const id = tr.dataset.pid;
+    data[id] = {
+      first_try: localStorage.getItem(keyFor(id, 'first_try')) || '',
+      passed: localStorage.getItem(keyFor(id, 'passed')) || '',
+      optimal: localStorage.getItem(keyFor(id, 'optimal')) || '',
+      thoughts: localStorage.getItem(keyFor(id, 'thoughts')) || '',
+    };
+  });
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'lc75_notes.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importNotes(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      Object.entries(data).forEach(([id, vals]) => {
+        ['first_try','passed','optimal','thoughts'].forEach(field => {
+          const val = vals[field] || '';
+          localStorage.setItem(keyFor(id, field), val);
+        });
+      });
+      loadCells();
+      alert('Notes imported ✅');
+    } catch (err) {
+      alert('Failed to import JSON: ' + err);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function filterRows() {
+  const q = document.getElementById('q').value.toLowerCase();
+  document.querySelectorAll('#grid tbody tr').forEach(tr => {
+    const text = tr.innerText.toLowerCase();
+    tr.style.display = text.includes(q) ? '' : 'none';
+  });
+}
+
+document.addEventListener('input', function(e) {
+  if (e.target.matches('.editable')) saveCell(e);
+});
+
+document.addEventListener('DOMContentLoaded', loadCells);
+</script>
+</body>
+</html>
