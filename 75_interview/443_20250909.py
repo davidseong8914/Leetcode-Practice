@@ -16,8 +16,4 @@ class Solution:
         return len(chars)
 
 
-            
-
-        return len(s)
-
         
