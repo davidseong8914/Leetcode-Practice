@@ -1,19 +1,17 @@
 class Solution:
     def findErrorNums(self, nums: List[int]) -> List[int]:
-        dup_num, cor_num = -1, -1
-
-        n = len(nums)
-        counts = {}
+        num_dict = {}
         
-        for x in nums:
-            counts[x] = counts.get(x, 0) + 1 # safe way to get value of x and if none assign 0
-            
-        # check numbers from 1 to n
-        for i in range(1, n + 1):
-            count = counts.get(i, 0)
-            if count == 2:
-                dup_num = i
-            elif count == 0:
-                cor_num = i
-                
+        for num in nums:
+            num_dict[num] = num_dict.get(num, 0) + 1
+
+        cor_num, dup_num = -1, -1
+
+        for x in range(1, len(nums) + 1):
+            if num_dict.get(x, 0) == 0:
+                cor_num = x
+            if num_dict.get(x, 0) > 1:
+                dup_num = x
+
         return [dup_num, cor_num]
+
