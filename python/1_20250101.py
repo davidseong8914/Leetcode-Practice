@@ -1,11 +1,21 @@
-class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
-        for i in range(len(nums)):
-            for j in range(1, len(nums)):
-                if i == j: 
-                    pass
-                else:
-                    if (target - nums[i]) == nums[j]:
-                        return [i, j]
+class Solution(object):
+    def twoSum(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        two_sum = {}
+        for i, num in enumerate(nums):
+            comp_num = target - num
+            if comp_num in two_sum:
+                return [two_sum[comp_num], i]
+            else:
+                two_sum[num] = i
+
+
+
         
-        return []
+
+            
+        
