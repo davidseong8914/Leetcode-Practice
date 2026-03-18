@@ -25,3 +25,6 @@ response = table.get_item(
 )
 # print(response['Item'])
 print(response)
+
+
+# S3
